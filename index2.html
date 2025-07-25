@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کارت بانکی حامد ظاهری</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            perspective: 1000px;
+        }
+        
+        .card {
+            background: linear-gradient(45deg, #2c3e50, #3498db, #8e44ad);
+            border-radius: 20px;
+            padding: 25px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+            cursor: pointer;
+            height: 280px;
+        }
+        
+        .card:hover {
+            transform: rotateY(10deg) rotateX(5deg);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+        
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></svg>');
+            background-size: 20px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .bank-logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 15px;
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+            z-index: 2;
+        }
+        
+        .card-chip {
+            position: absolute;
+            top: 60px;
+            left: 25px;
+            width: 40px;
+            height: 30px;
+            background: linear-gradient(135deg, #ffd700, #ffa500);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .card-chip::before {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 20px;
+            background: linear-gradient(135deg, #daa520, #b8860b);
+            border-radius: 3px;
+        }
+        
+        .card-number {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            letter-spacing: 3px;
+            display: flex;
+            gap: 15px;
+            z-index: 2;
+            direction: ltr;
+        }
+        
+        .card-number span {
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-holder {
+            position: absolute;
+            bottom: 65px;
+            right: 25px;
+            z-index: 2;
+        }
+        
+        .card-holder-name {
+            font-size: 18px;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+        
+        .copy-container {
+            position: absolute;
+            top: 60px;
+            right: 25px;
+            z-index: 2;
+        }
+        
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1);
+        }
+        
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .copy-btn.copied {
+            background: rgba(46, 204, 113, 0.3);
+            color: #2ecc71;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .notification.show {
+            bottom: 30px;
+        }
+        
+        .floating-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(50px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .card-type {
+            position: absolute;
+            bottom: 25px;
+            left: 25px;
+            font-size: 24px;
+            opacity: 0.7;
+        }
+        
+        .hologram {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 40px;
+            background: linear-gradient(45deg, #00cec9, #0984e3, #6c5ce7);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .hologram::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(30deg);
+            animation: shine 3s infinite linear;
+        }
+        
+        @keyframes shine {
+            0% { transform: rotate(30deg) translateX(-100%); }
+            100% { transform: rotate(30deg) translateX(100%); }
+        }
+        
+        .signature {
+            position: absolute;
+            bottom: 65px;
+            left: 25px;
+            height: 30px;
+            width: 120px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .glow-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            box-shadow: 
+                0 0 60px rgba(52, 152, 219, 0.3),
+                0 0 100px rgba(142, 68, 173, 0.2),
+                0 0 140px rgba(44, 62, 80, 0.1);
+            z-index: -1;
+            animation: glow-pulse 3s infinite alternate;
+        }
+        
+        @keyframes glow-pulse {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+        
+        @media (max-width: 480px) {
+            .card {
+                height: 250px;
+            }
+            
+            .card-number {
+                font-size: 18px;
+                gap: 10px;
+                letter-spacing: 1px;
+            }
+            
+            .card-holder-name {
+                font-size: 16px;
+            }
+            
+            .bank-logo {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card" id="bankCard">
+            <div class="glow-effect"></div>
+            <div class="bank-logo">SamanBank</div>
+            <div class="card-chip"></div>
+            <div class="card-number">
+                <span>6219</span>
+                <span>8619</span>
+                <span>3746</span>
+                <span>5424</span>
+            </div>
+            <div class="card-holder">
+                <div class="card-holder-label">نام دارنده کارت</div>
+                <div class="card-holder-name">حامد ظاهری</div>
+            </div>
+            <div class="copy-container">
+                <button class="copy-btn" id="copyBtn">
+                    <i class="far fa-copy"></i>
+                </button>
+            </div>
+            <div class="card-type">
+                <i class="fab fa-cc-visa"></i>
+            </div>
+            <div class="hologram"></div>
+            <div class="signature">H. ZAHERI</div>
+            <div class="floating-particles" id="particles"></div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span>شماره کارت با موفقیت کپی شد!</span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const card = document.getElementById('bankCard');
+            const copyBtn = document.getElementById('copyBtn');
+            const notification = document.getElementById('notification');
+            const particlesContainer = document.getElementById('particles');
+            const cardNumber = '6219861937465424';
+            
+            // ایجاد ذرات شناور
+            function createParticles() {
+                for (let i = 0; i < 15; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    
+                    // اندازه تصادفی
+                    const size = Math.random() * 5 + 2;
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    
+                    // موقعیت تصادفی
+                    particle.style.left = `${Math.random() * 100}%`;
+                    particle.style.top = `${Math.random() * 100}%`;
+                    
+                    // تاخیر و مدت انیمیشن تصادفی
+                    const delay = Math.random() * 15;
+                    const duration = Math.random() * 10 + 15;
+                    particle.style.animationDelay = `${delay}s`;
+                    particle.style.animationDuration = `${duration}s`;
+                    
+                    particlesContainer.appendChild(particle);
+                }
+            }
+            
+            // افکت تایپ شماره کارت
+            function typeCardNumber() {
+                const spans = document.querySelectorAll('.card-number span');
+                let delay = 0;
+                
+                spans.forEach(span => {
+                    const originalText = span.textContent;
+                    span.textContent = '';
+                    
+                    for (let i = 0; i < originalText.length; i++) {
+                        setTimeout(() => {
+                            span.textContent += originalText[i];
+                        }, delay);
+                        delay += 100;
+                    }
+                    
+                    delay += 300;
+                });
+            }
+            
+            // کپی شماره کارت
+            copyBtn.addEventListener('click', function() {
+                // کپی به کلیپ‌بورد
+                navigator.clipboard.writeText(cardNumber).then(() => {
+                    // نمایش نوتیفیکیشن
+                    notification.classList.add('show');
+                    
+                    // افکت دکمه کپی
+                    copyBtn.classList.add('copied');
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                    
+                    // افکت کارت
+                    card.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        card.style.transform = '';
+                    }, 300);
+                    
+                    // مخفی کردن نوتیفیکیشن پس از 3 ثانیه
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                    }, 3000);
+                    
+                    // بازگرداندن دکمه به حالت اولیه پس از 2 ثانیه
+                    setTimeout(() => {
+                        copyBtn.classList.remove('copied');
+                        copyBtn.innerHTML = '<i class="far fa-copy"></i>';
+                    }, 2000);
+                }).catch(err => {
+                    console.error('خطا در کپی کردن: ', err);
+                });
+            });
+            
+            // افکت حرکت کارت با موس
+            document.addEventListener('mousemove', (e) => {
+                if (window.innerWidth > 768) {
+                    const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+                    const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+                    card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+                }
+            });
+            
+            // بازگشت کارت به حالت اولیه وقتی موس خارج می‌شود
+            document.addEventListener('mouseleave', () => {
+                card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+            });
+            
+            // افکت حرکت کارت با لمس در موبایل
+            let touchStartX, touchStartY;
+            
+            card.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }, {passive: true});
+            
+            card.addEventListener('touchmove', (e) => {
+                if (!touchStartX || !touchStartY) return;
+                
+                const touchX = e.touches[0].clientX;
+                const touchY = e.touches[0].clientY;
+                
+                const diffX = touchStartX - touchX;
+                const diffY = touchStartY - touchY;
+                
+                const xAxis = diffX / 10;
+                const yAxis = diffY / 10;
+                
+                card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            }, {passive: true});
+            
+            card.addEventListener('touchend', () => {
+                card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+                touchStartX = null;
+                touchStartY = null;
+            }, {passive: true});
+            
+            // اجرای افکت‌ها
+            createParticles();
+            setTimeout(typeCardNumber, 500);
+            
+            // افکت لود اولیه کارت
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(50px) rotateX(30deg)';
+            setTimeout(() => {
+                card.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0) rotateX(0)';
+            }, 100);
+            
+            // افکت درخشش متناوب برای کارت
+            setInterval(() => {
+                const hue = Math.floor(Math.random() * 360);
+                card.style.boxShadow = `0 15px 35px hsla(${hue}, 80%, 50%, 0.3)`;
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
