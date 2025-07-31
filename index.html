@@ -1,508 +1,266 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>کارت بانکی سامان</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', 'Vazirmatn', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #0c0c14, #1a1a2e);
-            padding: 20px;
-            overflow-x: hidden;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            color: rgba(255, 255, 255, 0.85);
-            max-width: 600px;
-            padding: 0 20px;
-        }
-        
-        .header h1 {
-            font-size: 2.3rem;
-            margin-bottom: 15px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            background: linear-gradient(45deg, #d3b8a8, #e9d8c8);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .header p {
-            font-size: 1.15rem;
-            line-height: 1.7;
-        }
-        
-        .card-container {
-            perspective: 1500px;
-            width: 100%;
-            max-width: 340px;
-            height: 500px;
-            cursor: pointer;
-            margin: 0 auto 40px;
-        }
-        
-        .card {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            border-radius: 25px;
-        }
-        
-        .card.flipped {
-            transform: rotateY(180deg);
-        }
-        
-        .card-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 25px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            padding: 25px;
-        }
-        
-        .card-front {
-            background: linear-gradient(135deg, #b99178, #d3b8a8, #b99178);
-            color: #2c1e16;
-            justify-content: space-between;
-            box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.2);
-        }
-        
-        .card-back {
-            background: linear-gradient(135deg, #a87f68, #c9ab98);
-            color: #2c1e16;
-            padding: 35px;
-            text-align: center;
-            box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.2);
-            transform: rotateY(180deg);
-        }
-        
-        .bank-logo {
-            align-self: flex-end;
-            font-size: 24px;
-            font-weight: bold;
-            color: #4a3428;
-            letter-spacing: -0.5px;
-        }
-        
-        .card-number {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 8px;
-            font-size: 22px;
-            font-weight: 600;
-            margin: 20px 0;
-            letter-spacing: 2px;
-            color: #3a271d;
-        }
-        
-        .card-holder {
-            margin-top: auto;
-            text-align: right;
-        }
-        
-        .card-label {
-            font-size: 13px;
-            opacity: 0.8;
-            margin-bottom: 3px;
-            color: #5a4538;
-        }
-        
-        .card-value {
-            font-size: 20px;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-        
-        .copy-icon {
-            position: absolute;
-            bottom: 25px;
-            left: 25px;
-            background: rgba(90, 69, 56, 0.25);
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            z-index: 10;
-            color: #4a3428;
-            border: 1px solid rgba(90, 69, 56, 0.4);
-        }
-        
-        .copy-icon:hover {
-            background: rgba(90, 69, 56, 0.35);
-            transform: scale(1.05);
-            color: #3a271d;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-100px);
-            background: rgba(40, 167, 69, 0.9);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 30px;
-            font-weight: 500;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            font-size: 14px;
-        }
-        
-        .notification.show {
-            transform: translateX(-50%) translateY(0);
-        }
-        
-        .card-back-content {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 20px;
-            border-radius: 15px;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            backdrop-filter: blur(3px);
-        }
-        
-        .tips-title {
-            font-size: 22px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            color: #3a271d;
-        }
-        
-        .tips-list {
-            text-align: right;
-            list-style-type: none;
-            font-size: 15px;
-            line-height: 1.8;
-            color: #4a3428;
-        }
-        
-        .tips-list li {
-            margin-bottom: 10px;
-            position: relative;
-            padding-right: 20px;
-        }
-        
-        .tips-list li:before {
-            content: "•";
-            position: absolute;
-            right: 0;
-            color: #8a6d56;
-            font-size: 20px;
-        }
-        
-        /* Magnetic Effect */
-        .card-container {
-            --rotateX: 0deg;
-            --rotateY: 0deg;
-        }
-        
-        .card {
-            transform: rotateX(var(--rotateX)) rotateY(var(--rotateY));
-        }
-        
-        /* Copy Tooltip */
-        .copy-tooltip {
-            position: absolute;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(90, 69, 56, 0.9);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 30px;
-            font-size: 12px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-            white-space: nowrap;
-            backdrop-filter: blur(5px);
-            z-index: 15;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-        .copy-icon:hover .copy-tooltip {
-            opacity: 1;
-        }
-        
-        /* Responsive */
-        @media (max-width: 480px) {
-            .card-container {
-                height: 460px;
-                max-width: 320px;
-            }
-            
-            .header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .header p {
-                font-size: 0.95rem;
-            }
-            
-            .card-number {
-                font-size: 20px;
-                gap: 6px;
-            }
-            
-            .tips-list {
-                font-size: 14px;
-            }
-            
-            .copy-icon {
-                width: 42px;
-                height: 42px;
-                bottom: 20px;
-                left: 20px;
-            }
-        }
-        
-        .instructions {
-            max-width: 600px;
-            margin: 20px auto 40px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.95rem;
-            line-height: 1.7;
-            text-align: center;
-        }
-        
-        .instructions h3 {
-            color: #d3b8a8;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-        
-        .features {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .feature {
-            background: rgba(185, 145, 120, 0.15);
-            border-radius: 12px;
-            padding: 15px;
-            min-width: 180px;
-            text-align: center;
-        }
-        
-        .feature i {
-            font-size: 24px;
-            color: #d3b8a8;
-            margin-bottom: 10px;
-        }
-        
-        .feature-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #e9d8c8;
-        }
-        
-        .feature-desc {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
-        
-        .footer {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-            margin-top: 20px;
-            text-align: center;
-            padding: 0 20px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>کارت بانکی سامان</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0c0c14, #1a1a2e);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .card-container {
+      perspective: 1500px;
+      width: 100%;
+      max-width: 340px;
+      height: 500px;
+      position: relative;
+    }
+
+    .card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+      border-radius: 25px;
+    }
+
+    .card.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 25px;
+      display: flex;
+      flex-direction: column;
+      padding: 25px;
+    }
+
+    .card-front {
+      background: linear-gradient(135deg, #b99178, #d3b8a8);
+      color: #2c1e16;
+      justify-content: space-between;
+    }
+
+    .card-back {
+      background: linear-gradient(135deg, #a87f68, #c9ab98);
+      color: #2c1e16;
+      transform: rotateY(180deg);
+    }
+
+    .bank-logo {
+      align-self: flex-end;
+      font-size: 24px;
+      font-weight: bold;
+      color: #4a3428;
+    }
+
+    .card-number {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      margin-top: 30px;
+      margin-left: 10px;
+    }
+
+    .card-holder {
+      align-self: flex-end;
+      margin-right: 10px;
+      text-align: right;
+      margin-bottom: 10px;
+    }
+
+    .card-label {
+      font-size: 13px;
+      opacity: 0.8;
+      margin-bottom: 3px;
+      color: #5a4538;
+    }
+
+    .card-value {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .copy-icon {
+      position: absolute;
+      bottom: 25px;
+      right: 25px;
+      background: rgba(90, 69, 56, 0.25);
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(90, 69, 56, 0.4);
+      z-index: 10;
+    }
+
+    .copy-icon:hover {
+      background: rgba(90, 69, 56, 0.35);
+    }
+
+    .copy-tooltip {
+      position: absolute;
+      bottom: 75px;
+      right: 25px;
+      background: rgba(90, 69, 56, 0.9);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .copy-icon:hover + .copy-tooltip {
+      opacity: 1;
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: rgba(40, 167, 69, 0.9);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 30px;
+      font-weight: 500;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      transition: transform 0.4s ease;
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      font-size: 14px;
+    }
+
+    .notification.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .card-back-content {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 20px;
+      border-radius: 15px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .tips-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .tips-list {
+      list-style: none;
+      padding-right: 0;
+      font-size: 15px;
+      line-height: 1.8;
+      color: #4a3428;
+      text-align: right;
+    }
+
+    .tips-list li {
+      padding-right: 18px;
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .tips-list li::before {
+      content: "•";
+      position: absolute;
+      right: 0;
+      color: #8a6d56;
+      font-size: 18px;
+    }
+  </style>
 </head>
 <body>
-
-    
-    <div class="card-container" id="cardContainer">
-        <div class="card" id="card">
-            <div class="card-face card-front">
-                <div class="bank-logo">SamanBank</div>
-                
-                <div class="card-number">
-                    <div>6219</div>
-                    <div>8619</div>
-                    <div>3746</div>
-                    <div>5424</div>
-                </div>
-                
-                <div class="card-holder">
-                    <div class="card-label">نام دارنده کارت</div>
-                    <div class="card-value">حامد ظاهری</div>
-                </div>
-                
-                <div class="copy-icon" id="copyIcon">
-                    <i class="far fa-copy"></i>
-                    <div class="copy-tooltip">کپی کردن شماره کارت</div>
-                </div>
-            </div>
-            
-            <div class="card-face card-back">
-                <div class="card-back-content">
-                    <div class="tips-title">نکته مهم:</div>
-                    <ul class="tips-list">
-                        <li>نظر به امکان بروز خطا یا جعل رسید در پرداخت‌های کارت‌به‌کارت، تأیید نهایی پرداخت صرفاً پس از مشاهده و تأیید واریز در حساب بانکی این‌جانب صورت می‌پذیرد.</li>
-                    </ul>
-                </div>
-            </div>
+  <div class="card-container" id="cardContainer">
+    <div class="card" id="card">
+      <div class="card-face card-front">
+        <div class="bank-logo">Saman Bank</div>
+        <div class="card-number">
+          <div>6219</div>
+          <div>8619</div>
+          <div>3746</div>
+          <div>5424</div>
         </div>
+        <div class="card-holder">
+          <div class="card-label">نام دارنده کارت</div>
+          <div class="card-value">حامد ظاهری</div>
+        </div>
+        <div class="copy-icon" id="copyIcon">
+          <i class="far fa-copy"></i>
+        </div>
+        <div class="copy-tooltip">کپی کردن شماره کارت</div>
+      </div>
+      <div class="card-face card-back">
+        <div class="card-back-content">
+          <div class="tips-title">توجه مهم:</div>
+          <ul class="tips-list">
+            <li>نظر به امکان بروز خطا، جعل یا بازگشت تراکنش در انتقال وجه کارت‌به‌کارت، صرف مشاهده رسید یا تصویر آن به‌تنهایی معتبر نمی‌باشد. تأیید واریز وجه صرفاً از طریق مشاهده پیامک بانکی یا بررسی مستقیم در اپلیکیشن بانکی انجام خواهد شد.</li>
+          </ul>
+        </div>
+      </div>
     </div>
-    
-    <div class="notification" id="notification">!شماره کارت کپی شد</div>
-    
+  </div>
+  <div class="notification" id="notification">!شماره کارت کپی شد</div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const card = document.getElementById('card');
+      const copyIcon = document.getElementById('copyIcon');
+      const notification = document.getElementById('notification');
+      const cardNumber = '6219861937465424';
+      let isFlipped = false;
 
-    
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('.copy-icon')) return;
+        isFlipped = !isFlipped;
+        card.classList.toggle('flipped');
+      });
 
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const card = document.getElementById('card');
-            const copyIcon = document.getElementById('copyIcon');
-            const notification = document.getElementById('notification');
-            const cardContainer = document.getElementById('cardContainer');
-            const cardNumber = '6219861937465424';
-            let isFlipped = false;
-            
-            // Card Flip Animation
-            card.addEventListener('click', (e) => {
-                // Ignore clicks on copy icon
-                if (e.target.closest('.copy-icon')) return;
-                
-                isFlipped = !isFlipped;
-                
-                // Flip animation
-                card.classList.toggle('flipped');
-                
-                // Reset rotation for better animation
-                gsap.to(card, {
-                    '--rotateX': '0deg',
-                    '--rotateY': '0deg',
-                    duration: 0.3
-                });
-            });
-            
-            // Copy Card Number
-            copyIcon.addEventListener('click', (e) => {
-                e.stopPropagation();
-                navigator.clipboard.writeText(cardNumber).then(() => {
-                    showNotification();
-                    
-                    // Add animation to copy icon
-                    gsap.to(copyIcon, {
-                        scale: 1.2,
-                        duration: 0.2,
-                        yoyo: true,
-                        repeat: 1
-                    });
-                });
-            });
-            
-            function showNotification() {
-                notification.classList.add('show');
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 2000);
-            }
-            
-            // Magnetic Effect
-            cardContainer.addEventListener('mousemove', (e) => {
-                const { left, top, width, height } = cardContainer.getBoundingClientRect();
-                const x = e.clientX - left;
-                const y = e.clientY - top;
-                
-                // Magnetic effect - only horizontal rotation
-                const relX = x / width - 0.5;
-                
-                // Adjust rotation direction based on card flip state
-                const rotationFactor = isFlipped ? -1 : 1;
-                
-                gsap.to(card, {
-                    duration: 0.5,
-                    '--rotateX': '0deg',
-                    '--rotateY': `${-relX * 8 * rotationFactor}deg`,
-                    ease: "power2.out"
-                });
-            });
-            
-            cardContainer.addEventListener('mouseleave', () => {
-                gsap.to(card, {
-                    duration: 0.7,
-                    '--rotateX': '0deg',
-                    '--rotateY': '0deg',
-                    ease: "elastic.out(1.2, 0.4)"
-                });
-            });
-            
-            // Touch support for mobile
-            cardContainer.addEventListener('touchmove', (e) => {
-                e.preventDefault();
-                const touch = e.touches[0];
-                const { left, top, width, height } = cardContainer.getBoundingClientRect();
-                const x = touch.clientX - left;
-                const y = touch.clientY - top;
-                
-                const relX = x / width - 0.5;
-                
-                // Adjust rotation direction based on card flip state
-                const rotationFactor = isFlipped ? -1 : 1;
-                
-                gsap.to(card, {
-                    duration: 0.5,
-                    '--rotateX': '0deg',
-                    '--rotateY': `${-relX * 12 * rotationFactor}deg`,
-                    ease: "power2.out"
-                });
-            }, { passive: false });
-            
-            cardContainer.addEventListener('touchend', () => {
-                gsap.to(card, {
-                    duration: 0.7,
-                    '--rotateX': '0deg',
-                    '--rotateY': '0deg',
-                    ease: "elastic.out(1.2, 0.4)"
-                });
-            });
+      copyIcon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        navigator.clipboard.writeText(cardNumber).then(() => {
+          notification.classList.add('show');
+          setTimeout(() => notification.classList.remove('show'), 2000);
         });
-    </script>
+      });
+    });
+  </script>
 </body>
 </html>
