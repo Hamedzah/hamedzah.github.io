@@ -16,15 +16,81 @@
     }
 
     body {
-      background: linear-gradient(135deg, #0c0c14, #1a1a2e);
+      background: linear-gradient(135deg, #1a1512 0%, #2c241e 100%);
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
       min-height: 100vh;
       padding: 20px;
+      overflow: hidden;
+      position: relative;
     }
 
+    /* بک‌گراند جدید با افکت‌های پویا */
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.15;
+      filter: blur(15px);
+      transition: transform 0.2s ease-out;
+    }
+
+    .shape-1 {
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(135deg, #b99178 0%, #d3b8a8 100%);
+      top: 10%;
+      right: 10%;
+    }
+
+    .shape-2 {
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(135deg, #d3b8a8 0%, #b99178 100%);
+      bottom: 15%;
+      left: 15%;
+    }
+
+    .shape-3 {
+      width: 250px;
+      height: 250px;
+      background: linear-gradient(135deg, rgba(185, 145, 120, 0.7) 0%, rgba(211, 184, 168, 0.7) 100%);
+      top: 50%;
+      left: 5%;
+    }
+
+    .shape-4 {
+      width: 180px;
+      height: 180px;
+      background: linear-gradient(135deg, rgba(211, 184, 168, 0.6) 0%, rgba(185, 145, 120, 0.6) 100%);
+      bottom: 5%;
+      right: 20%;
+    }
+
+    .floating-particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(211, 184, 168, 0.15);
+      border-radius: 50%;
+    }
     .card-container {
       perspective: 1500px;
       width: 100%;
@@ -209,6 +275,13 @@
   </style>
 </head>
 <body>
+  <div class="background">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+    <div class="floating-particles" id="particles"></div>
+  </div>
   <div class="card-container" id="cardContainer">
     <div class="card" id="card">
       <div class="card-face card-front">
@@ -246,7 +319,46 @@
       const notification = document.getElementById('notification');
       const cardNumber = '6219861937465424';
       let isFlipped = false;
+      // افزودن ذرات شناور
+      const particlesContainer = document.getElementById('particles');
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        const size = Math.random() * 10 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        
+        particlesContainer.appendChild(particle);
+        
+        // انیمیشن ذرات
+        gsap.to(particle, {
+          y: Math.random() * 100 - 50,
+          x: Math.random() * 100 - 50,
+          duration: Math.random() * 10 + 10,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut"
+        });
+      }
 
+      // افکت حرکت اشکال با ماوس
+      const shapes = document.querySelectorAll('.shape');
+      document.addEventListener('mousemove', (e) => {
+        const x = e.clientX / window.innerWidth - 0.5;
+        const y = e.clientY / window.innerHeight - 0.5;
+        
+        shapes.forEach((shape, index) => {
+          const speed = 1 + (index * 0.3);
+          const moveX = x * 20 * speed;
+          const moveY = y * 20 * speed;
+          
+          shape.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+      });
       card.addEventListener('click', (e) => {
         if (e.target.closest('.copy-icon')) return;
         isFlipped = !isFlipped;
