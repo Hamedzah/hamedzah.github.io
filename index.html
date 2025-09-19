@@ -322,6 +322,14 @@ html {
   <div dir="rtl" class="notification" id="notification">شماره کارت کپی شد!</div>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+  // تشخیص دستگاه iOS
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  
+  if (isIOS) {
+
+    document.body.style.background = '#2c241e';
+    }
+    document.addEventListener('DOMContentLoaded', () => {
       const card = document.getElementById('card');
       const copyIcon = document.getElementById('copyIcon');
       const notification = document.getElementById('notification');
