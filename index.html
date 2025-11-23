@@ -4,12 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>کارت بانکی سامان</title>
-    <meta name="theme-color" content="#b99178" />
-  <meta name="msapplication-navbutton-color" content="#b99178" /> <!-- برای مرورگرهای مایکروسافت -->
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /> <!-- برای سافاری -->
+  <meta name="theme-color" content="#b99178" />
+  <meta name="msapplication-navbutton-color" content="#b99178" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -17,10 +18,12 @@
       box-sizing: border-box;
       font-family: 'Vazirmatn', sans-serif;
     }
-html {
-  height: 100%;
-  -webkit-backface-visibility: hidden;
-}
+
+    html {
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+    }
+
     body {
       display: flex;
       justify-content: center;
@@ -31,76 +34,18 @@ html {
       min-height: 100vh;
       min-height: -webkit-fill-available;
       overflow: hidden;
-      background: #1a1512; /* Fallback color for older browsers */
+      background: #1a1512;
     }
 
-    .background {
-      background: -webkit-linear-gradient(135deg, #1a1512 0%, #2c241e 100%);
-      background: linear-gradient(135deg, #1a1512 0%, #2c241e 100%);
+    #particles-js {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       z-index: -1;
-      overflow: hidden;
-      -webkit-transform: translateZ(0);
-      transform: translateZ(0);
-    }
-    .shape {
-      position: absolute;
-      border-radius: 50%;
-      opacity: 0.15;
-      -webkit-filter: blur(15px);
-      filter: blur(15px);
-      transition: transform 0.2s ease-out;
     }
 
-    .shape-1 {
-      width: 300px;
-      height: 300px;
-      background: linear-gradient(135deg, #b99178 0%, #d3b8a8 100%);
-      top: 10%;
-      right: 10%;
-    }
-
-    .shape-2 {
-      width: 200px;
-      height: 200px;
-      background: linear-gradient(135deg, #d3b8a8 0%, #b99178 100%);
-      bottom: 15%;
-      left: 15%;
-    }
-
-    .shape-3 {
-      width: 250px;
-      height: 250px;
-      background: linear-gradient(135deg, rgba(185, 145, 120, 0.7) 0%, rgba(211, 184, 168, 0.7) 100%);
-      top: 50%;
-      left: 5%;
-    }
-
-    .shape-4 {
-      width: 180px;
-      height: 180px;
-      background: linear-gradient(135deg, rgba(211, 184, 168, 0.6) 0%, rgba(185, 145, 120, 0.6) 100%);
-      bottom: 5%;
-      right: 20%;
-    }
-
-    .floating-particles {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-    }
-
-    .particle {
-      position: absolute;
-      background: rgba(211, 184, 168, 0.15);
-      border-radius: 50%;
-    }
     .card-container {
       perspective: 1500px;
       width: 100%;
@@ -285,13 +230,7 @@ html {
   </style>
 </head>
 <body>
-  <div class="background">
-    <div class="shape shape-1"></div>
-    <div class="shape shape-2"></div>
-    <div class="shape shape-3"></div>
-    <div class="shape shape-4"></div>
-    <div class="floating-particles" id="particles"></div>
-  </div>
+  <div id="particles-js"></div>
   <div class="card-container" id="cardContainer">
     <div class="card" id="card">
       <div class="card-face card-front">
@@ -324,51 +263,119 @@ html {
   <div dir="rtl" class="notification" id="notification">شماره کارت کپی شد!</div>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // پیکربندی و راه‌اندازی particles.js با استایل Bubble
+      particlesJS('particles-js', {
+        particles: {
+          number: {
+            value: 80,
+            density: {
+              enable: true,
+              value_area: 800
+            }
+          },
+          color: {
+            value: "#b99178"
+          },
+          shape: {
+            type: "circle",
+            stroke: {
+              width: 0,
+              color: "#000000"
+            },
+            polygon: {
+              nb_sides: 5
+            }
+          },
+          opacity: {
+            value: 0.5,
+            random: false,
+            anim: {
+              enable: false,
+              speed: 1,
+              opacity_min: 0.1,
+              sync: false
+            }
+          },
+          size: {
+            value: 3,
+            random: true,
+            anim: {
+              enable: false,
+              speed: 40,
+              size_min: 0.1,
+              sync: false
+            }
+          },
+          line_linked: {
+            enable: true,
+            distance: 150,
+            color: "#d3b8a8",
+            opacity: 0.4,
+            width: 1
+          },
+          move: {
+            enable: true,
+            speed: 2,
+            direction: "none",
+            random: false,
+            straight: false,
+            out_mode: "bounce",
+            bounce: false,
+            attract: {
+              enable: false,
+              rotateX: 600,
+              rotateY: 1200
+            }
+          }
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: {
+            onhover: {
+              enable: true,
+              mode: "bubble"
+            },
+            onclick: {
+              enable: true,
+              mode: "push"
+            },
+            resize: true
+          },
+          modes: {
+            grab: {
+              distance: 400,
+              line_linked: {
+                opacity: 1
+              }
+            },
+            bubble: {
+              distance: 250,
+              size: 6,
+              duration: 2,
+              opacity: 0.8,
+              speed: 3
+            },
+            repulse: {
+              distance: 200,
+              duration: 0.4
+            },
+            push: {
+              particles_nb: 4
+            },
+            remove: {
+              particles_nb: 2
+            }
+          }
+        },
+        retina_detect: true
+      });
+
       const card = document.getElementById('card');
       const copyIcon = document.getElementById('copyIcon');
       const notification = document.getElementById('notification');
       const cardNumber = '6219861937465424';
       let isFlipped = false;
-      // افزودن ذرات شناور
-      const particlesContainer = document.getElementById('particles');
-      for (let i = 0; i < 30; i++) {
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-        
-        const size = Math.random() * 10 + 2;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        
-        particle.style.left = `${Math.random() * 100}%`;
-        particle.style.top = `${Math.random() * 100}%`;
-        
-        particlesContainer.appendChild(particle);
-        
-        // انیمیشن ذرات
-        gsap.to(particle, {
-          y: Math.random() * 100 - 50,
-          x: Math.random() * 100 - 50,
-          duration: Math.random() * 10 + 10,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut"
-        });
-      }
 
-      // افکت حرکت اشکال با ماوس
-      const shapes = document.querySelectorAll('.shape');
-      document.addEventListener('mousemove', (e) => {
-        const x = e.clientX / window.innerWidth - 0.5;
-        const y = e.clientY / window.innerHeight - 0.5;
-        
-        shapes.forEach((shape, index) => {
-          const speed = 1 + (index * 0.3);
-          const moveX = x * 20 * speed;
-          const moveY = y * 20 * speed;
-          
-          shape.style.transform = `translate(${moveX}px, ${moveY}px)`;
-        });
-      });
       card.addEventListener('click', (e) => {
         if (e.target.closest('.copy-icon')) return;
         isFlipped = !isFlipped;
